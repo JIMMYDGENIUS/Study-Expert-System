@@ -1,0 +1,3 @@
+[
+  "tests/test_api.py::test_generate_and_exports"
+]

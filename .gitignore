@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+
+# Node modules (if any in frontend)
+node_modules/
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
