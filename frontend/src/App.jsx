@@ -13,16 +13,19 @@ function App() {
 
   // Add new course
   const addCourse = () => {
-    setFormData({
-      ...formData,
-      courses: [
-        ...formData.courses,
-        {
-          name: "",
-          credit_unit: 3,
-          confidence_level: 3,
-        },
-      ],
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        courses: [
+          ...prev.courses,
+          { name: "", credit_unit: 3, confidence_level: 3 },
+        ],
+      };
+      // Auto scroll to bottom after state updates in next tick
+      setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      }, 0);
+      return updated;
     });
   };
 
@@ -97,10 +100,11 @@ function App() {
               <input
                 type="number"
                 min="1"
+                max="24"
                 step="0.5"
                 value={formData.avg_hours_per_day}
                 onChange={(e) =>
-                  setFormData({ ...formData, avg_hours_per_day: parseFloat(e.target.value) || 0 })
+                  setFormData({ ...formData, avg_hours_per_day: Math.min(24, parseFloat(e.target.value) || 0) })
                 }
                 className="input"
                 required

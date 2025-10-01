@@ -42,9 +42,10 @@ def generate_schedule(req: GenerateRequest) -> GenerateResponse:
     for day in days:
         allocations = []
         for course_name, hours in course_hours.items():
+            per_day = max(1.0, hours / len(days))
             allocations.append({
                 "course": course_name,
-                "hours": round(hours / len(days), 2)
+                "hours": round(per_day, 2)
             })
         schedule.append(DailyAllocation(day=day, allocations=allocations))
 

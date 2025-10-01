@@ -20,7 +20,7 @@ class GenerateRequest(BaseModel):
     student_name: str
     academic_level: str  # e.g., "100L", "200L"
     semester: str        # e.g., "First Semester", "Second Semester"
-    avg_hours_per_day: float = Field(gt=0)
+    avg_hours_per_day: float = Field(gt=0, le=24)
     courses: List[Course]
 
 
