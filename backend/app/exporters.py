@@ -31,8 +31,14 @@ class ExportRegistry:
 
         for daily in self._last.schedule:
             for alloc in daily.allocations:
-                hours = alloc.get("hours", 0)
-                writer.writerow([daily.day, alloc.get("course", ""), hours])
+                # Support both dict-like and pydantic model allocations
+                course = getattr(alloc, "course", None)
+                hours = getattr(alloc, "hours", None)
+                if course is None and isinstance(alloc, dict):
+                    course = alloc.get("course", "")
+                if hours is None and isinstance(alloc, dict):
+                    hours = alloc.get("hours", 0)
+                writer.writerow([daily.day, course or "", hours or 0])
 
         filename = f"{sanitize_filename(self._last.student_name)}_schedule.csv"
         return buf.getvalue().encode("utf-8"), filename
@@ -70,8 +76,13 @@ class ExportRegistry:
                     continue
                 start = current_row
                 for idx, alloc in enumerate(daily.allocations):
-                    hours = alloc.get('hours', 0)
-                    row = [daily.day if idx == 0 else "", alloc.get('course', ''), f"{hours} hrs"]
+                    course = getattr(alloc, 'course', None)
+                    hours = getattr(alloc, 'hours', None)
+                    if course is None and isinstance(alloc, dict):
+                        course = alloc.get('course', '')
+                    if hours is None and isinstance(alloc, dict):
+                        hours = alloc.get('hours', 0)
+                    row = [daily.day if idx == 0 else "", course or '', f"{hours} hrs"]
                     data.append(row)
                     current_row += 1
                 end = current_row - 1
@@ -105,8 +116,12 @@ class ExportRegistry:
                 first = True
                 span = len(daily.allocations)
                 for alloc in daily.allocations:
-                    course = alloc.get('course', '')
-                    hours = alloc.get('hours', 0)
+                    course = getattr(alloc, 'course', None)
+                    hours = getattr(alloc, 'hours', None)
+                    if course is None and isinstance(alloc, dict):
+                        course = alloc.get('course', '')
+                    if hours is None and isinstance(alloc, dict):
+                        hours = alloc.get('hours', 0)
                     if first:
                         html_rows += f"<tr><td rowspan='{span}' class='day'>{daily.day}</td><td>{course}</td><td>{hours} hrs</td></tr>"
                         first = False
@@ -159,8 +174,12 @@ class ExportRegistry:
                 textobject.textLine("")
                 for daily in self._last.schedule:
                     for alloc in daily.allocations:
-                        course = alloc.get('course', '')
-                        hours = alloc.get('hours', 0)
+                        course = getattr(alloc, 'course', None)
+                        hours = getattr(alloc, 'hours', None)
+                        if course is None and isinstance(alloc, dict):
+                            course = alloc.get('course', '')
+                        if hours is None and isinstance(alloc, dict):
+                            hours = alloc.get('hours', 0)
                         line = f"{daily.day} | {course} | {hours} hrs"
                         textobject.textLine(line[:120])
                 c.drawText(textobject)

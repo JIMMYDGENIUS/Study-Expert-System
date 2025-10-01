@@ -66,7 +66,6 @@ body {
 .actions { display: flex; justify-content: flex-end; }
 .actions { gap: 12px; align-items: center; }
 .actions-left { margin-right: auto; }
-.actions-right { }
 .button {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 8px; padding: 10px 16px; border-radius: 10px; border: 1px solid transparent;
