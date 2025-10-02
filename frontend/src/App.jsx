@@ -40,7 +40,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/generate", {
+      const res = await fetch("https://study-expert-system.onrender.com/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -201,7 +201,7 @@ function App() {
 
             <div className="download-actions">
               <button type="button" className="button" onClick={async () => {
-                const res = await fetch("http://127.0.0.1:8000/api/download/csv");
+                const res = await fetch("https://study-expert-system.onrender.com/api/download/csv");
                 if (!res.ok) return alert("No schedule available yet.");
                 const { filename, content, mime } = await res.json();
                 const blob = new Blob([content], { type: mime });
@@ -211,7 +211,7 @@ function App() {
               }}>Download CSV</button>
 
               <button type="button" className="button" onClick={async () => {
-                const res = await fetch("http://127.0.0.1:8000/api/download/pdf");
+                const res = await fetch("https://study-expert-system.onrender.com/api/download/pdf");
                 if (!res.ok) return alert("No schedule available yet.");
                 const { filename, content_base64, mime } = await res.json();
                 const byteChars = atob(content_base64);
