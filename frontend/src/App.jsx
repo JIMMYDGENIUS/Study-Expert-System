@@ -106,6 +106,7 @@ function App() {
                 onChange={(e) =>
                   setFormData({ ...formData, avg_hours_per_day: Math.min(24, parseFloat(e.target.value) || 0) })
                 }
+                onFocus={(e) => e.target.select()}
                 className="input"
                 required
               />
@@ -131,31 +132,38 @@ function App() {
                     />
                   </div>
 
+                  {/* ✅ Credit Unit Dropdown */}
                   <div className="form-group">
                     <label className="label">Credit Unit</label>
-                    <input
-                      type="number"
-                      min="1"
+                    <select
                       value={course.credit_unit}
-                      onChange={(e) => updateCourse(ci, "credit_unit", parseInt(e.target.value) || 1)}
+                      onChange={(e) => updateCourse(ci, "credit_unit", parseInt(e.target.value))}
                       className="input"
                       required
-                    />
+                    >
+                      {[1, 2, 3, 4, 5, 6,7,8,9,10].map((unit) => (
+                        <option key={unit} value={unit}>
+                          {unit} Unit{unit > 1 ? "s" : ""}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
+                  {/* ✅ Confidence Level Dropdown with Descriptive Labels */}
                   <div className="form-group">
-                    <label className="label">Confidence Level (1-5)</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="5"
+                    <label className="label">Confidence Level</label>
+                    <select
                       value={course.confidence_level}
-                      onChange={(e) =>
-                        updateCourse(ci, "confidence_level", Math.min(5, Math.max(1, parseInt(e.target.value) || 1)))
-                      }
+                      onChange={(e) => updateCourse(ci, "confidence_level", parseInt(e.target.value))}
                       className="input"
                       required
-                    />
+                    >
+                      <option value={1}>1 - Very Low</option>
+                      <option value={2}>2 - Low</option>
+                      <option value={3}>3 - Moderate</option>
+                      <option value={4}>4 - High</option>
+                      <option value={5}>5 - Very High</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -164,10 +172,14 @@ function App() {
 
           <div className="actions">
             <div className="actions-left">
-              <button type="button" onClick={addCourse} className="button button-primary">+ Add Course</button>
+              <button type="button" onClick={addCourse} className="button button-primary">
+                + Add Course
+              </button>
             </div>
             <div className="actions-right">
-              <button type="submit" className="button button-accent">Generate Schedule</button>
+              <button type="submit" className="button button-accent">
+                Generate Schedule
+              </button>
             </div>
           </div>
         </form>
@@ -175,7 +187,9 @@ function App() {
         {schedule && (
           <div className="card">
             <h2 className="section-title">{schedule.student_name} Study Timetable</h2>
-            <p className="subtitle">Level: {schedule.academic_level} · Semester: {schedule.semester}</p>
+            <p className="subtitle">
+              Level: {schedule.academic_level} · Semester: {schedule.semester}
+            </p>
             <table className="table">
               <thead>
                 <tr>
@@ -185,7 +199,7 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {schedule.schedule.map((daily, di) => (
+                {schedule.schedule.map((daily, di) =>
                   daily.allocations.map((alloc, ai) => (
                     <tr key={`${di}-${ai}`}>
                       {ai === 0 ? (
@@ -195,33 +209,51 @@ function App() {
                       <td>{alloc.hours} hrs</td>
                     </tr>
                   ))
-                ))}
+                )}
               </tbody>
             </table>
 
             <div className="download-actions">
-              <button type="button" className="button" onClick={async () => {
-                const res = await fetch("https://study-expert-system.onrender.com/api/download/csv");
-                if (!res.ok) return alert("No schedule available yet.");
-                const { filename, content, mime } = await res.json();
-                const blob = new Blob([content], { type: mime });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
-              }}>Download CSV</button>
+              <button
+                type="button"
+                className="button"
+                onClick={async () => {
+                  const res = await fetch("https://study-expert-system.onrender.com/api/download/csv");
+                  if (!res.ok) return alert("No schedule available yet.");
+                  const { filename, content, mime } = await res.json();
+                  const blob = new Blob([content], { type: mime });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = filename;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                Download CSV
+              </button>
 
-              <button type="button" className="button" onClick={async () => {
-                const res = await fetch("https://study-expert-system.onrender.com/api/download/pdf");
-                if (!res.ok) return alert("No schedule available yet.");
-                const { filename, content_base64, mime } = await res.json();
-                const byteChars = atob(content_base64);
-                const byteNumbers = new Array(byteChars.length);
-                for (let i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
-                const blob = new Blob([new Uint8Array(byteNumbers)], { type: mime });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
-              }}>Download PDF</button>
+              <button
+                type="button"
+                className="button"
+                onClick={async () => {
+                  const res = await fetch("https://study-expert-system.onrender.com/api/download/pdf");
+                  if (!res.ok) return alert("No schedule available yet.");
+                  const { filename, content_base64, mime } = await res.json();
+                  const byteChars = atob(content_base64);
+                  const byteNumbers = new Array(byteChars.length);
+                  for (let i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+                  const blob = new Blob([new Uint8Array(byteNumbers)], { type: mime });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = filename;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                Download PDF
+              </button>
             </div>
 
             {schedule.per_course_hours && (

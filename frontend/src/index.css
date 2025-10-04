@@ -38,6 +38,7 @@ body {
 
 .form-group { display: flex; flex-direction: column; gap: 8px; }
 .label { font-size: 13px; color: var(--muted); }
+
 .input {
   width: 90%;
   padding: 12px 14px;
@@ -51,6 +52,43 @@ body {
 .input:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* ✨ DROPDOWN STYLE IMPROVEMENT ✨ */
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px 40px 12px 14px; /* space for arrow */
+  font-size: 16px;
+  width: 90%;
+  outline: none;
+  transition: box-shadow .2s, border-color .2s, background .2s;
+  cursor: pointer;
+
+  /* Custom dropdown arrow */
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+select.input:hover {
+  border-color: var(--primary);
+  background-image: linear-gradient(45deg, transparent 50%, var(--primary) 50%),
+                    linear-gradient(135deg, var(--primary) 50%, transparent 50%);
+}
+
+select.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--ring);
+  background-image: linear-gradient(45deg, transparent 50%, var(--accent) 50%),
+                    linear-gradient(135deg, var(--accent) 50%, transparent 50%);
 }
 
 .section { display: flex; flex-direction: column; gap: 12px; }
